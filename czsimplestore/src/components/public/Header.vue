@@ -12,8 +12,36 @@
         <router-link tag="span" to="/navlink">官方论坛</router-link>
       </div>
       <div class="right_bar">
-        <div class="center"></div>
-        <div class="shoppingcar"></div>
+        <div class="user">
+          <dl class="user-wrapper">
+            <dt class="user-info">
+              <span class="avatar"></span>
+              <span>+86 138****9453</span>
+            </dt>
+            <dd class="order">
+              <a href="javascript:;">我的订单</a>
+            </dd>
+            <dd class="support">
+              <a href="javascript:;">售后服务</a>
+            </dd>
+            <dd class="coupon">
+              <a href="javascript:;">我的优惠</a>
+            </dd>
+            <dd class="information">
+              <a href="javascript:;">账户资料</a>
+            </dd>
+            <dd class="address">
+              <a href="javascript:;">收货地址</a>
+            </dd>
+            <dd class="logout">
+              <a href="javascript:;">退出</a>
+            </dd>
+          </dl>
+        </div>
+        <div class="shoppingcar">
+          <span class="cart"></span>
+          <span class="num">0</span>
+        </div>
       </div>
     </div>
   </div>
@@ -36,6 +64,11 @@
     span {
       padding: 0 25px;
       text-align: center;
+      color: #999999;
+      cursor: pointer;
+      &:hover {
+        color: #fff;
+      }
     }
   }
   .right_bar {
@@ -43,7 +76,6 @@
     width: 159px;
     height: 20px;
     display: flex;
-    // justify-content: space-around;
     &::before {
       position: absolute;
       content: "";
@@ -53,17 +85,140 @@
       height: 100%;
       background: #999999;
     }
-    .center {
+    .user {
+      position: relative;
       margin-left: 40px;
       width: 20px;
       height: 20px;
       background: url("../../assets/img/account-icon.png") -155px 0;
+      background-clip: content-box;
+      &:hover {
+        background-position: -245px 0px;
+        & > .user-wrapper {
+          display: block;
+        }
+      }
+      .user-wrapper {
+        display: none;
+        position: absolute;
+        top: 40px;
+        left: 50%;
+        width: 168px;
+        background: #fff;
+        transform: translateX(-50%);
+        border-radius: 8px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        &::before {
+          content: "";
+          position: absolute;
+          left: 48%;
+          top: 0px;
+          width: 20px;
+          height: 20px;
+          transform: rotate(45deg) translateX(-50%);
+          background: #fff;
+          border-radius: 5px;
+        }
+        &::after {
+          content: "";
+          position: absolute;
+          left: 48%;
+          top: -20px;
+          width: 100px;
+          height: 40px;
+          transform: translateX(-50%);
+          background: transparent;
+          border-radius: 5px;
+        }
+        dt.user-info {
+          display: flex;
+          flex-direction: column;
+          padding: 15px 0;
+          span {
+            color: #333;
+          }
+          span.avatar {
+            display: block;
+            position: relative;
+            margin: 0 auto;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background-color: #ddd;
+            margin-bottom: 8px;
+          }
+        }
+        dd {
+          a {
+            display: block;
+            position: relative;
+            line-height: 44px;
+            height: 44px;
+            font-size: 12px;
+            color: #616161;
+            border-top: 1px solid #f5f5f5;
+            text-decoration: none;
+            &:hover {
+              background: #fafafa;
+            }
+            &::before {
+              background: url(../../assets/img/account-icon.png) no-repeat;
+              background-size: 240px 107px;
+              content: " ";
+              display: block;
+              position: absolute;
+              left: 22px;
+              top: 50%;
+              width: 20px;
+              height: 20px;
+              margin-top: -8px;
+            }
+          }
+          &:nth-of-type(1) a::before {
+            background-position: 0 -44px;
+          }
+          &:nth-of-type(2) a::before {
+            background-position: -20px -44px;
+          }
+          &:nth-of-type(3) a::before {
+            background-position: -20px -84px;
+          }
+          &:nth-of-type(4) a::before {
+            background-position: 0 -64px;
+          }
+          &:nth-of-type(5) a::before {
+            background-position: -20px -64px;
+          }
+          &:nth-of-type(6) a::before {
+            background-position: 0 -84px;
+          }
+        }
+      }
     }
     .shoppingcar {
-      margin-left: 30px;
-      width: 30px;
-      height: 20px;
-      background: url(../../assets/img/account-icon.png) -150px -22px;
+        display: flex;
+        align-items: center;
+      span.cart {
+        margin-left: 30px;
+        width: 30px;
+        height: 20px;
+        background: url(../../assets/img/account-icon.png) -150px -22px;
+        &:hover {
+          background-position: -240px -22px;
+        }
+      }
+      span.num {
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        text-align: center;
+        color: #fff;
+        background: #eb746b;
+        background-image: linear-gradient(#eb746b, #e25147);
+        box-shadow: inset 0 0 1px rgba(255, 255, 255, 0.15),
+          0 1px 2px rgba(255, 255, 255, 0.15);
+        border-radius: 50%;
+      }
     }
   }
 }
