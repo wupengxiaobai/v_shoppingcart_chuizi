@@ -38,14 +38,22 @@
             </dd>
           </dl>
         </div>
-        <div class="shoppingcar">
-          <span class="cart"></span>
-          <span class="num">0</span>
-        </div>
+        <!-- 购物车组件 -->
+        <CarPanel/>
       </div>
     </div>
   </div>
 </template>
+
+<script>
+import CarPanel from "components/public/CarPanel.vue";
+export default {
+  components: {
+    CarPanel
+  }
+};
+</script>
+
 
 <style lang="less" scoped>
 .header {
@@ -195,31 +203,7 @@
         }
       }
     }
-    .shoppingcar {
-        display: flex;
-        align-items: center;
-      span.cart {
-        margin-left: 30px;
-        width: 30px;
-        height: 20px;
-        background: url(../../assets/img/account-icon.png) -150px -22px;
-        &:hover {
-          background-position: -240px -22px;
-        }
-      }
-      span.num {
-        width: 20px;
-        height: 20px;
-        line-height: 20px;
-        text-align: center;
-        color: #fff;
-        background: #eb746b;
-        background-image: linear-gradient(#eb746b, #e25147);
-        box-shadow: inset 0 0 1px rgba(255, 255, 255, 0.15),
-          0 1px 2px rgba(255, 255, 255, 0.15);
-        border-radius: 50%;
-      }
-    }
+    
   }
 }
 
