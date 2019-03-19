@@ -3,7 +3,7 @@
     <div class="container">
       <div class="logo"></div>
       <div class="nav">
-        <router-link tag="span" to="/navlink">在线商城</router-link>
+        <router-link tag="span" to="/index">在线商城</router-link>
         <router-link tag="span" to="/navlink">坚果Pro</router-link>
         <router-link tag="span" to="/navlink">Smartisan M1/M1L</router-link>
         <router-link tag="span" to="/navlink">Smartisan OS</router-link>
@@ -57,6 +57,8 @@ export default {
 
 <style lang="less" scoped>
 .header {
+  position: relative;
+  z-index: 999;
   height: 100px;
   color: #fff;
   background: #333;
@@ -203,7 +205,6 @@ export default {
         }
       }
     }
-    
   }
 }
 

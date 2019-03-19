@@ -2,6 +2,8 @@
   <div class="shoppingcar">
     <div
       class="cart"
+      ref="cart"
+      :class="{'hover-class':carPanelShow}"
       @mouseenter="carPanelOpeartion('show')"
       @mouseleave="carPanelOpeartion('hide')"
     >
@@ -30,7 +32,7 @@
                   <span class="num">{{ good.count }}</span>
                 </p>
               </div>
-              <div class="del-btn" @click="delGoods(good.sku_id)"></div>
+              <div class="del-btn" @click="delGoods(good)"></div>
             </div>
           </div>
           <div class="totalWrapper">
@@ -51,6 +53,13 @@
           </div>
         </div>
       </div>
+
+      <!-- 小球 -->
+      <transition name="ball" @beforeEnter="beforeEnter" @enter="enter" @afterEnter="afterEnter">
+        <div v-show="ball.show" class="ball" ref="ball">
+          <img :src="ball.img" alt>
+        </div>
+      </transition>
     </div>
     <span class="numTotal">{{ shoppingTotal.totalCount }}</span>
   </div>
@@ -60,13 +69,38 @@
 import { mapState, mapGetters, mapMutations } from "vuex";
 export default {
   methods: {
-    delGoods(id) {
-      this.$store.commit("delShopping", id);
+    delGoods(data) {
+      //   this.$store.commit("delShopping", id);
+      this.shoppingOperation({ data, type: "delShop" });
     },
-    ...mapMutations(["carPanelOpeartion"])
+    // 小球动画函数
+    beforeEnter(el) {
+      let rect = this.ball.el.getBoundingClientRect(); //  触发目标相关值
+      let cart = this.$refs["cart"].getBoundingClientRect();
+      //   let ball = this.$refs["ball"].getBoundingClientRect(); //  小球
+      //  初始找不到小球位置, 全部是0, 可能和display:none 有关系. 所以这里给了固定位置
+      /* let x = ball.left + ball.width / 2 - (rect.left + rect.width / 2);
+      let y = ball.top + ball.height / 2 - (rect.top + rect.height / 2); */
+      let x = cart.left + cart.width / 2 - (rect.left + rect.width / 2) - 20;
+      let y = cart.top + cart.height / 2 - (rect.top + rect.height / 2) - 20;
+      el.style.transform = "translate3d(" + -x + "px," + -y + "px,0)";
+    },
+    enter(el, done) {
+      el.offsetWidth; //  主动渲染动画
+      el.style.transform = "translate3d(0,0,0)";
+      el.style.transition = "1s ease";
+      //  马上调用 afterEnter
+      done();
+    },
+    afterEnter(el) {
+      // 初始化小球
+      this.ball.show = false;
+    },
+    //  vuex方法映射
+    ...mapMutations(["carPanelOpeartion", "shoppingOperation"])
   },
   computed: {
-    ...mapState(["shoppingCarData", "carPanelShow"]),
+    ...mapState(["shoppingCarData", "carPanelShow", "ball"]),
     ...mapGetters(["shoppingTotal"])
   }
 };
@@ -77,13 +111,14 @@ export default {
 .shoppingcar {
   display: flex;
   align-items: center;
+  position: relative;
   .cart {
     position: relative;
     margin-left: 30px;
     width: 30px;
     height: 20px;
     background: url(../../assets/img/account-icon.png) -150px -22px;
-    &:hover {
+    &.hover-class {
       background-position: -240px -22px;
       /* & > .shopppingCarWrapper {
         display: flex;
@@ -241,6 +276,18 @@ export default {
         transform: translateX(-50%);
         background: transparent;
         border-radius: 5px;
+      }
+    }
+    .ball {
+      overflow: hidden;
+      position: absolute;
+      background: #eb746b;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      img {
+        width: 100%;
+        height: 100%;
       }
     }
   }

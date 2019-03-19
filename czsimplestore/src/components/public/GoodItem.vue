@@ -26,7 +26,11 @@
       </ul>
     </div>
     <div class="item-btns">
-      <span class="item-gray-btn">查看详情</span>
+      <router-link
+        tag="span"
+        :to="'/goodDetail?goodId='+goodData.sku_info[currentIndex]['sku_id']"
+        class="item-gray-btn"
+      >查看详情</router-link>
       <span class="item-blue-btn" @click="addShopping(goodData.sku_info[currentIndex])">加入购物车</span>
     </div>
     <div class="item-price">
@@ -53,8 +57,11 @@ export default {
   methods: {
     //   添加商品到购物车
     addShopping(data) {
-      //  添加商品到购物车
-      this.$store.commit("addShopping", data);
+      // this.$store.commit("shoppingOperation", {data, type:'addShop'});
+      this.shoppingOperation({
+        data,
+        type: "addShop"
+      });
       //  显示购物车面版
       this.carPanelOpeartion("show");
     },
@@ -62,8 +69,9 @@ export default {
     changeCurrentIndex(index) {
       this.currentIndex = index;
     },
-    ...mapMutations(["carPanelOpeartion"])
+    ...mapMutations(["carPanelOpeartion", "shoppingOperation"])
   },
+  computed: {},
   created() {}
 };
 </script>
@@ -73,6 +81,8 @@ export default {
   width: 25%;
   padding: 14px;
   .item-img {
+    display: flex;
+    flex-direction: column;
     img {
       height: 206px;
     }

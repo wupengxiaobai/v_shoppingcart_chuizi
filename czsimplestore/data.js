@@ -88,6 +88,7 @@ let data = {
                 'show_name': '蓝瑟'
             }
         }]
-    }]
+    }],
+    "imgs": ["../assets/img/goods/db1.jpg", "../assets/img/goods/db2.jpg", "../assets/img/goods/db3.jpg", "../assets/img/goods/db4.jpg", "../assets/img/goods/db5.jpg"]
 }
 export default data
