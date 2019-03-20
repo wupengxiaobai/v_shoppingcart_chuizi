@@ -47,12 +47,12 @@
         </div>
         <div class="number">
           <p>数量选择：</p>
-          <span :class="{'disable':count<=1}" @click="changeBuyCount('decrement')">-</span>
+          <span :class="{'disable':count<=1}" @click="changeBuyCount('decrement')">－</span>
           <i>{{ count }}</i>
           <span
             :class="{'disable':count>=maxCount || count == 0}"
             @click="changeBuyCount('increment')"
-          >+</span>
+          >＋</span>
         </div>
         <div class="buttons">
           <div class="addShopping" @click="addShopping(currentGood)">加入购物车</div>

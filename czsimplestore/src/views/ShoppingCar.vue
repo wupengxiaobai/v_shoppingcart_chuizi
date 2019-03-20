@@ -11,10 +11,18 @@
         <div>操作</div>
       </div>
       <div class="t-body">
-        <div class="no-shop" v-if="!shoppingCarData.length">购物车空空如也，去看看宝贝们吧 ~_~</div>
+        <div class="no-shop" v-if="!shoppingCarData.length">
+          <img src="../assets/img/cart-box-empty.png" alt>
+          <router-link tag="div" to="/index" class="tips">购物车空空如也，去看看宝贝们吧 ~_~</router-link>
+        </div>
         <div class="shop-item" v-for="(item,index) in shoppingCarData" :key="index">
           <div class="info">
-            <input type="checkbox" name="checkOne">
+            <input
+              type="checkbox"
+              @click="shoppingCarCheckboxStatusChange(item.sku_id)"
+              :checked="item.checked"
+              class="checkOne"
+            >
             <div class="img">
               <img :src="item.ali_image" :alt="item.sub_title">
             </div>
@@ -24,23 +32,42 @@
             </div>
           </div>
           <div class="price">￥ {{ item.price }}</div>
-          <div class="number">{{ item.count }}</div>
+          <div class="number">
+            <span
+              class="decrement"
+              :class="{'disable':item.count<=1}"
+              @click="changeBuyCount({type:'decrement',goodId:item.sku_id})"
+            >－</span>
+            <span class="count">{{ item.count }}</span>
+            <span
+              class="increment"
+              :class="{'disable':item.count>=item['limit-num']}"
+              @click="changeBuyCount({type:'increment',goodId:item.sku_id})"
+            >＋</span>
+          </div>
           <div class="smalltotal">￥ {{ item.count * item.price }}</div>
-          <div class="operation"></div>
+          <div class="operation">
+            <div class="del-btn" @click="delGoods(item)"></div>
+          </div>
         </div>
       </div>
       <div class="t-footer" v-if="shoppingCarData.length">
         <div class="left">
           <label>
-            <input type="checkbox" name="checkAll">全选
+            <input
+              type="checkbox"
+              @click="shoppingCarAllCheckboxStatusChange"
+              :checked="shoppingCarAllCheckboxStatus"
+              name="checkAll"
+            >全选
           </label>
-          <span class="del-all">删除选中的所有商品</span>
+          <span class="del-all" @click="delShoppingCarCheckedCommodity">删除选中的所有商品</span>
         </div>
         <div class="right">
           <div class="count">
             <div class="seclecdCount">
               已选择
-              <span>0</span> 件商品
+              <span>{{ shoppingCarCheckboxCheckedTotal.totalCountChecked }}</span> 件商品
             </div>
             <div class="allCount">
               共计
@@ -48,12 +75,18 @@
             </div>
           </div>
           <div class="price">
-            <div class="totalPrice">应付总额：￥
-              <span> {{ shoppingTotal.totalPrice }}</span>
+            <div class="totalPrice">
+              应付总额：￥
+              <span>{{ shoppingCarCheckboxCheckedTotal.totalPriceChecked }}</span>
             </div>
             <div class="tips">应付总额不含运费</div>
           </div>
-          <div class="pay" :class="{'disable':true}">现在结算</div>
+          <router-link
+            tag="div"
+            class="pay"
+            :class="{'disable':shoppingCarCheckboxCheckedTotal.totalCountChecked<=0}"
+            to="/clearing"
+          >现在结算</router-link>
         </div>
       </div>
     </div>
@@ -62,22 +95,40 @@
 
 <script>
 import Header from "components/public/Header.vue";
-import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 export default {
   data() {
     return {};
   },
-  methods: {},
+  methods: {
+    //   购物车商品添加/减少
+    changeBuyCount(params) {
+      this.shoppingCarInDeOperation(params);
+    },
+    //   操作移除商品
+    delGoods(data) {
+      this.shoppingOperation({ data, type: "delShop" });
+    },
+    ...mapMutations([
+      "shoppingOperation",
+      "shoppingCarCheckboxStatusChange",
+      "shoppingCarAllCheckboxStatusChange",
+      "delShoppingCarCheckedCommodity",
+      "shoppingCarInDeOperation"
+    ])
+  },
   components: {
     Header
   },
   computed: {
     ...mapState(["shoppingCarData"]),
-    ...mapGetters(["shoppingTotal"])
+    ...mapGetters([
+      "shoppingTotal",
+      "shoppingCarAllCheckboxStatus",
+      "shoppingCarCheckboxCheckedTotal"
+    ])
   },
-  created() {
-    console.log(this.shoppingCarData);
-  }
+  created() {}
 };
 </script>
 
@@ -137,11 +188,24 @@ export default {
     }
   }
   .t-body {
-    min-height: 200px;
+    min-height: 260px;
     .no-shop {
-      padding-top: 100px;
-      margin: 0 auto;
-      text-align: center;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      .tips {
+        text-decoration: underline;
+        color: #959595;
+        &:hover {
+          color: palevioletred;
+        }
+        cursor: pointer;
+      }
+      img {
+        width: 180px;
+      }
     }
     .shop-item {
       display: flex;
@@ -188,6 +252,35 @@ export default {
       }
       .number {
         flex: 1;
+        .count {
+          display: inline-block;
+          font-size: 14px;
+          line-height: 22px;
+          width: 50px;
+        }
+        .decrement,
+        .increment {
+          background: #fff;
+          width: 22px;
+          height: 22px;
+          font-size: 22px;
+          line-height: 22px;
+          text-align: center;
+          border-radius: 50%;
+          border: 1px solid #ddd;
+          -webkit-box-shadow: 0 0 3px 1px #ddd;
+          box-shadow: 0 0 3px 1px #ddd;
+          -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+          cursor: pointer;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          &.disable {
+            cursor: not-allowed;
+          }
+        }
       }
       .smalltotal {
         flex: 1;
@@ -195,6 +288,18 @@ export default {
       }
       .operation {
         flex: 1;
+        display: flex;
+        justify-content: center;
+        .del-btn {
+          width: 24px;
+          height: 24px;
+          background-image: url("../assets/img/delete-btn-icon.jpg");
+          background-position: 0 0;
+          cursor: pointer;
+          &:hover {
+            background-position: 0 -36px;
+          }
+        }
       }
     }
   }
@@ -268,11 +373,18 @@ export default {
         text-shadow: rgba(255, 255, 255, 0.496094) 0 1px 0;
         user-select: none;
         border-radius: 9px;
+        opacity: 1;
         cursor: pointer;
+        &:hover {
+          opacity: 0.9;
+        }
         &.disable {
           background: linear-gradient(#c3c3c3, #abaaaa);
           box-shadow: inset 0 1px 3px #ccc;
           cursor: no-drop;
+          &:hover {
+            opacity: 1;
+          }
         }
       }
     }

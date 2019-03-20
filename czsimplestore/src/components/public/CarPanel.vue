@@ -15,12 +15,7 @@
         </div>
         <div class="no-empty" v-show="shoppingCarData.length">
           <div class="cart-list">
-            <div
-              class="cart-item"
-              v-for="good in shoppingCarData"
-              :key="good.sku_id
-                  "
-            >
+            <div class="cart-item" v-for="good in shoppingCarData" :key="good.sku_id">
               <div class="left-img">
                 <img :src="good.ali_image" alt>
               </div>
