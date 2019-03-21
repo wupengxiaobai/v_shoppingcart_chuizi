@@ -34,6 +34,11 @@ export default new Router({
             path: '/clearing',
             name: 'clearing',
             component: () => import('./views/Clearing.vue')
+        },
+        {
+            path: '/payment',
+            name: 'payment',
+            component: () => import('./views/Payment.vue')
         }
     ]
 })

@@ -5,7 +5,34 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        shoppingCarData: [],
+        shoppingCarData: [], //  购物车数据
+        receiveInfo: [{
+            'name': '吴某某',
+            'phone': '18958859752',
+            'areaCode': '010',
+            'landLine': '64627856',
+            'provinceId': 110000,
+            'province': '北京市',
+            'cityId': 110100,
+            'city': '市辖区',
+            'countyId': '110106',
+            'county': '海定区',
+            'add': '某某街某某号楼320室',
+            'default': true
+        }, {
+            'name': '向某某',
+            'phone': '189********',
+            'areaCode': '010',
+            'landLine': '64627856',
+            'provinceId': 110000,
+            'province': '北京市',
+            'cityId': 110100,
+            'city': '市辖区',
+            'countyId': '110106',
+            'county': '海定区',
+            'add': '某某街某某号楼319室',
+            'default': false
+        }], //  收货地址
         shoppingAlertShow: false, //  添加购物车弹出框
         carPanelShow: false, //  购物车显示
         ball: {
@@ -13,7 +40,8 @@ export default new Vuex.Store({
             el: null, //  触发对象
             img: null
         }, //  小球
-        checkedAll: true //  购物车全选按钮选中
+        checkedAll: true, //  购物车全选按钮选中
+        OrderData: [], //  提交的订单数据
     },
     mutations: {
         //  加入购物车/删除购物车商品操作
@@ -96,7 +124,7 @@ export default new Vuex.Store({
                 state.carPanelShow = false;
             }
         },
-        // 改变shoppingAlertShow状态
+        //  改变购物弹出层状态
         shoppingAlertShowChange(state, type) {
             if (type === 'show') {
                 state.shoppingAlertShow = true
@@ -104,7 +132,7 @@ export default new Vuex.Store({
                 state.shoppingAlertShow = false
             }
         },
-        // 改变的购物车中, 单选checkbox状态
+        //  改变的购物车中, 单选checkbox状态
         shoppingCarCheckboxStatusChange(state, goodId) {
             state.shoppingCarData.forEach(item => {
                 if (item.sku_id == goodId) {
@@ -137,8 +165,37 @@ export default new Vuex.Store({
                     state.shoppingCarData.splice(i, 1)
                 }
             }
+        },
+        //  修改默认地址
+        changeDefaultAddress(state, addressIndex) {
+            state.receiveInfo.forEach((item, receiveIndex) => {
+                item.default = false;
+                if (addressIndex == receiveIndex) {
+                    item.default = true;
+                }
+            })
+        },
+        //  添加收货地址操作
+        addShoppingAddress(state, data) {
+            state.receiveInfo.push(data)
+            //  如果数据表示设置为默认地址
+            if (data.default) {
+                console.log(this)
+                this.commit('changeDefaultAddress', state.receiveInfo.length - 1)
+            }
+        },
+        // 保存订单数据的方法
+        shoppingOrderSave(state, data) {
+            //  保存订单数据
+            state.OrderData.unshift(data);
+            //  删除购物车中相关数据
+            let i = state.shoppingCarData.length;
+            while (i--) {
+                if (state.shoppingCarData[i].checked) {
+                    state.shoppingCarData.splice(i, 1)
+                }
+            }
         }
-
     },
     /* actions: {
         shoppingOperation: ({
@@ -187,6 +244,10 @@ export default new Vuex.Store({
                 totalCountChecked,
                 totalPriceChecked
             }
+        },
+        //  拿取默认的收获地址数据
+        getDefaultShoppingAddress(state) {
+            return state.receiveInfo.find(item => item.default == true)
         }
     }
 })
