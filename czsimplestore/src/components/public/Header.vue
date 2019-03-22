@@ -19,19 +19,10 @@
               <span>+86 138****9453</span>
             </dt>
             <dd class="order">
-              <a href="javascript:;">我的订单</a>
-            </dd>
-            <dd class="support">
-              <a href="javascript:;">售后服务</a>
-            </dd>
-            <dd class="coupon">
-              <a href="javascript:;">我的优惠</a>
-            </dd>
-            <dd class="information">
-              <a href="javascript:;">账户资料</a>
+              <router-link to="/account/order">我的订单</router-link>
             </dd>
             <dd class="address">
-              <a href="javascript:;">收货地址</a>
+              <router-link to="/account/address">收货地址</router-link>
             </dd>
             <dd class="logout">
               <a href="javascript:;">退出</a>

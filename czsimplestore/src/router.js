@@ -1,12 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
-// import GoodDetail from './views/GoodDetail.vue'
-// import Clearing from './views/Clearing.vue'
 
 Vue.use(Router)
 
 export default new Router({
+    linkActiveClass: 'active',
     routes: [{
             path: '/',
             name: 'home',
@@ -39,6 +38,20 @@ export default new Router({
             path: '/payment',
             name: 'payment',
             component: () => import('./views/Payment.vue')
+        },
+        {
+            path: '/account',
+            component: () => import('./views/account.vue'),
+            children: [{
+                path: 'order',
+                name: 'order',
+                component: () => import('./views/orderCenter/order.vue')
+            }, {
+                path: 'address',
+                name: 'address',
+                component: () => import('./views/orderCenter/address.vue')
+            }]
+
         }
     ]
 })
